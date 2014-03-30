@@ -5,7 +5,8 @@ define(['core/Renderers/Renderer'], function(Renderer){
 	// you could pass src streight away without using objects
 	var RendererOptions = {
 		sprites : 'Characters', // with sprite class should use : its js file. Ex. SpritesCharacters.js -> Characters
-		spritesScale : 0.65
+		spritesScale : 0.65,
+		layerLevel : 1,
 	};
 
 
@@ -52,13 +53,11 @@ define(['core/Renderers/Renderer'], function(Renderer){
 		* for repeating background when moving character
 		* TODO: implement responsive design 
 		*/
-		this.render = function(position){
+		this.render = function(params){
 
 			// clear background everytime
 			this.clear();
 
-
-			
 			// draw two backgrounds
 			
 				this.draw({
@@ -66,18 +65,13 @@ define(['core/Renderers/Renderer'], function(Renderer){
 					i_startY : 0,
 					i_width : spriteWidth,
 					i_height : spriteHeight,
-					c_startX : 100,
-					c_startY: 650,
+					c_startX : params.position.x,
+					c_startY: params.position.y,
 					c_width : charWidth, // not used 
 					c_height : charHeight, // not used,
 					character : 'mario',
-					state : position.state
+					state : params.state
 				});
-
-		};
-
-
-		calcBgHeight = function(){
 
 		};
 

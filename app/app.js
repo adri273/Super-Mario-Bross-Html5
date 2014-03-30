@@ -9,6 +9,7 @@ require.config({
         // the right side is the path to
         // the jQuery file, relative to baseUrl.
         jquery        : '../libs/jquery',
+        socket_io      : '../libs/socket.io.min',
         
         // helpers
         //Session             : 'helpers/sessions',
@@ -33,17 +34,41 @@ define(['require', 'jquery', 'settings',
     'core/Renderers/Renderer', 
     'core/Renderers/RendererBackground', 
     'core/Renderers/RendererCharacter',
-    'core/utility'
+
+    'controllers/playerController',
+
+    'core/utility',
+    'socket_io'
     ], 
-function(require, $, settings, walkingController, keyController, GameEngine, Renderer, RendererBackground, RendererCharacter, Utility){
-
-
+function(require, $, settings, walkingController, keyController, GameEngine, Renderer, RendererBackground, RendererCharacter, PlayerController, Utility, socket_io){
 
     function appController(){
 
-        var utility = Utility.getInstance();
-        utility.setInstanceName('App.js');
-        console.log(utility.getInstanceName());
+
+        var USEDIPADRESS = 'remote';
+
+        var ipAdress = {
+            local : '127.0.0.1',
+            remote :  '192.168.0.3'
+        };
+
+
+        var server = socket_io.connect('http://'+ipAdress[USEDIPADRESS]+':9191');
+        server.on('connect', function(data){            
+            console.log('Player connecting ...');
+        });
+        server.on('newplayer', function(data){
+            console.log('Player - new player connected');
+             var playerController = PlayerController.create();
+        });
+
+
+        var u = Utility.getInstance();
+        u.setInstanceName('App.js');
+
+
+        // moving model
+        var playerController = PlayerController.create();
 
 
         var key = new keyController();
@@ -58,19 +83,10 @@ function(require, $, settings, walkingController, keyController, GameEngine, Ren
             character : 'mario',
             state : 'normal'
         };
-        $(window).on('appKeypress', function(e) {
-            if(e.key === 39)
-            //position += 10;
-            walkingDirectives = walk.walk('right');
-            else if(e.key === 37)
-            //position -= 10;
-            walkingDirectives = walk.walk('left');
-        });
-
 
 
         var bg = new RendererBackground();
-        var mario = new RendererCharacter();
+        //var mario = new RendererCharacter();
 
         // Controller
         // main application controller
@@ -78,8 +94,10 @@ function(require, $, settings, walkingController, keyController, GameEngine, Ren
         var AppController = function(){
             this.run = function(){
                 bg.render(walkingDirectives.position);
-                mario.render(walkingDirectives);
+                //mario.render(walkingDirectives);
                 key.listener();
+
+                u.publish('OnHeartbeat');
             };
         };
 

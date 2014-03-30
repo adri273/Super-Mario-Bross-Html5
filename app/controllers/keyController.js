@@ -14,13 +14,14 @@ define(['jquery','core/utility'], function($, Utility){
 
 		this.u = Utility.getInstance();
 
+
 		console.log(this.u.getInstanceName());
 
 	}
 
 	function getTimeDiff(time){
 		return new Date().getTime() - time;
-	};
+	}
 
 	keyController.prototype = {
 
@@ -69,6 +70,8 @@ define(['jquery','core/utility'], function($, Utility){
 
 		calcForce : function(){
 			var self = this;
+			//if(Object.keys(this._keys).length)
+			//console.log(this._keys[39]);
 			$.each(this._keys, function(index, key){
 				var diff = getTimeDiff(key.registered);
 				key.force = diff/100;
@@ -84,18 +87,13 @@ define(['jquery','core/utility'], function($, Utility){
 
 
 
-
-
-
-
-
 		///////////////////////////////
 		///////////////////////////////
 		///////////////////////////////
 
 
 		emmitKeys : function(key){
-			$(window).trigger({
+			this.u.$game.trigger({
 				type : 'appKeypress',
 				key : key.key,
 				force : key.force

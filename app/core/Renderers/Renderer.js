@@ -37,7 +37,7 @@ define(['require', 'core/Sprites/SpritesCharacters'], function (require) {
 
 		// level of the canvas layer 
 		// in the scope of canvas
-		this.layerLevel = 0;
+		this.layerLevel = options.layerLevel || 0;
 
 		// using sprites or background ?
 		this.usingSprites = false;
@@ -91,6 +91,10 @@ define(['require', 'core/Sprites/SpritesCharacters'], function (require) {
 			this._canvas = background.getContext('2d');
 			var boardElement = $('#game'); 
 			boardElement.append(background);
+
+			$('canvas#' + 'gamecanvas' + canvasName).css({
+				'z-index' : this.layerLevel
+			});
 		},
 
 		/**
